@@ -16,7 +16,7 @@ import (
 	"github.com/joho/godotenv"
 )
 
-// prep a map to feed the batch sql
+// prep a map to feed the batch sql - test
 func N26Upload(object []*n26.Transaction) {
 	n26BatchSend(valueReplace(object))
 }
