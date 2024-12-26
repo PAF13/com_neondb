@@ -85,7 +85,7 @@ func n26BatchSend(commands *[]string) {
 	stop := 0
 	for _, b := range *commands {
 		batch.Queue(b)
-		if stop < 20 {
+		if stop > 20 {
 			break
 		} else {
 			stop = stop + 1
