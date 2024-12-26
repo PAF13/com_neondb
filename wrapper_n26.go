@@ -95,8 +95,8 @@ func n26BatchSend(commands *[]string) {
 	br := conn.SendBatch(ctx, batch)
 	defer br.Close()
 
-	// Handle batch results
-	for i := 0; i < len(*commands); i++ {
+	// Handle batch results for i := 0; i < len(*commands); i++ {
+	for i := 0; i < 20; i++ {
 		_, err := br.Exec()
 		if err != nil {
 			log.Printf("Error executing query %d: %v", i+1, err)
