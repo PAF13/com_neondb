@@ -30,7 +30,7 @@ func valueReplace(object []*n26.Transaction) *[]string {
 	length := len(object)
 	for i, v := range object {
 		if i != 0 {
-			fmt.Println("Version 0.0.1 | adding " + strconv.Itoa(i) + " / " + strconv.Itoa(length))
+			fmt.Println("Version 0.0.1 | adding " + strconv.Itoa(i) + " / " + strconv.Itoa(length-1))
 			string_b := strings.Replace(string(file), "\r\n", "", -1)
 
 			insertSQL := string(string_b)
@@ -83,9 +83,11 @@ func n26BatchSend(commands *[]string) {
 	// Create a batch
 	batch := &pgx.Batch{}
 	stop := 0
+	limitSize := 1000
+
 	for _, b := range *commands {
 		batch.Queue(b)
-		if stop > 20 {
+		if stop > limitSize {
 			break
 		} else {
 			stop = stop + 1
@@ -96,7 +98,7 @@ func n26BatchSend(commands *[]string) {
 	defer br.Close()
 
 	// Handle batch results for i := 0; i < len(*commands); i++ {
-	for i := 0; i < 20; i++ {
+	for i := 0; i < limitSize; i++ {
 		_, err := br.Exec()
 		if err != nil {
 			log.Printf("Error executing query %d: %v", i+1, err)
