@@ -25,8 +25,9 @@ func valueReplace(object []*n26.Transaction) *[]string {
 	}
 
 	batch := []string{}
-
-	for _, v := range object {
+	length := len(object)
+	for i, v := range object {
+		fmt.Println("adding " + string(i) + " / " + string(length))
 		insertSQL := string(file)
 		insertSQL = strings.Replace(insertSQL, "$1", "`"+v.BookingDate+"`", 1)
 		insertSQL = strings.Replace(insertSQL, "$2", "`"+v.ValueDate+"`", 1)
