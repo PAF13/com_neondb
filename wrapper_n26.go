@@ -30,7 +30,9 @@ func valueReplace(object []*n26.Transaction) *[]string {
 	length := len(object)
 	for i, v := range object {
 		fmt.Println("Version 0.0.1 | adding " + strconv.Itoa(i) + " / " + strconv.Itoa(length))
-		insertSQL := string(file)
+		string_b := strings.Replace(string(file), "\r\n", "", -1)
+
+		insertSQL := string(string_b)
 		insertSQL = strings.Replace(insertSQL, "$1", checkNil(v.BookingDate), 1)
 
 		insertSQL = strings.Replace(insertSQL, "$2", checkNil(v.ValueDate), 1)
