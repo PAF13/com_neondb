@@ -29,7 +29,7 @@ func valueReplace(object []*n26.Transaction) *[]string {
 	batch := []string{}
 	length := len(object)
 	for i, v := range object {
-		fmt.Println("adding " + strconv.Itoa(i) + " / " + strconv.Itoa(length))
+		fmt.Println("Fixed? adding " + strconv.Itoa(i) + " / " + strconv.Itoa(length))
 		insertSQL := string(file)
 		insertSQL = strings.Replace(insertSQL, "$1", checkNil(v.BookingDate), 1)
 
