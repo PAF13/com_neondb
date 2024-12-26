@@ -29,24 +29,26 @@ func valueReplace(object []*n26.Transaction) *[]string {
 	batch := []string{}
 	length := len(object)
 	for i, v := range object {
-		fmt.Println("Version 0.0.1 | adding " + strconv.Itoa(i) + " / " + strconv.Itoa(length))
-		string_b := strings.Replace(string(file), "\r\n", "", -1)
+		if i != 0 {
+			fmt.Println("Version 0.0.1 | adding " + strconv.Itoa(i) + " / " + strconv.Itoa(length))
+			string_b := strings.Replace(string(file), "\r\n", "", -1)
 
-		insertSQL := string(string_b)
-		insertSQL = strings.Replace(insertSQL, "$1", checkNil(v.BookingDate), 1)
+			insertSQL := string(string_b)
+			insertSQL = strings.Replace(insertSQL, "$1", checkNil(v.BookingDate), 1)
 
-		insertSQL = strings.Replace(insertSQL, "$2", checkNil(v.ValueDate), 1)
-		insertSQL = strings.Replace(insertSQL, "$3", checkNil(v.PartnerName), 1)
-		insertSQL = strings.Replace(insertSQL, "$4", checkNil(v.PartnerIBAN), 1)
-		insertSQL = strings.Replace(insertSQL, "$5", checkNil(v.Type), 1)
-		insertSQL = strings.Replace(insertSQL, "$6", checkNil(v.PaymentReference), 1)
-		insertSQL = strings.Replace(insertSQL, "$7", checkNil(v.AccountName), 1)
-		insertSQL = strings.Replace(insertSQL, "$8", fmt.Sprintf("%f", v.AmountEUR), 1)
-		insertSQL = strings.Replace(insertSQL, "$9", fmt.Sprintf("%f", v.OriginalAmount), 1)
-		insertSQL = strings.Replace(insertSQL, "$10", checkNil(v.OriginalCurrency), 1)
-		insertSQL = strings.Replace(insertSQL, "$11", fmt.Sprintf("%f", v.ExchangeRate), 1)
+			insertSQL = strings.Replace(insertSQL, "$2", checkNil(v.ValueDate), 1)
+			insertSQL = strings.Replace(insertSQL, "$3", checkNil(v.PartnerName), 1)
+			insertSQL = strings.Replace(insertSQL, "$4", checkNil(v.PartnerIBAN), 1)
+			insertSQL = strings.Replace(insertSQL, "$5", checkNil(v.Type), 1)
+			insertSQL = strings.Replace(insertSQL, "$6", checkNil(v.PaymentReference), 1)
+			insertSQL = strings.Replace(insertSQL, "$7", checkNil(v.AccountName), 1)
+			insertSQL = strings.Replace(insertSQL, "$8", fmt.Sprintf("%f", v.AmountEUR), 1)
+			insertSQL = strings.Replace(insertSQL, "$9", fmt.Sprintf("%f", v.OriginalAmount), 1)
+			insertSQL = strings.Replace(insertSQL, "$10", checkNil(v.OriginalCurrency), 1)
+			insertSQL = strings.Replace(insertSQL, "$11", fmt.Sprintf("%f", v.ExchangeRate), 1)
 
-		batch = append(batch, insertSQL)
+			batch = append(batch, insertSQL)
+		}
 	}
 
 	fileJSON, _ := json.MarshalIndent(batch, "", " ")
@@ -59,9 +61,10 @@ func checkNil(value string) string {
 	if value == "" {
 		return "null"
 	} else {
-		return "`" + value + "`"
+		return "'" + value + "'"
 	}
 }
+
 func n26BatchSend(commands *[]string) {
 	err := godotenv.Load()
 	if err != nil {
