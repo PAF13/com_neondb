@@ -2,10 +2,12 @@ package com_neondb
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 
@@ -27,7 +29,7 @@ func valueReplace(object []*n26.Transaction) *[]string {
 	batch := []string{}
 	length := len(object)
 	for i, v := range object {
-		fmt.Println("adding " + string(i) + " / " + string(length))
+		fmt.Println("adding " + strconv.Itoa(i) + " / " + strconv.Itoa(length))
 		insertSQL := string(file)
 		insertSQL = strings.Replace(insertSQL, "$1", checkNil(v.BookingDate), 1)
 
@@ -45,6 +47,9 @@ func valueReplace(object []*n26.Transaction) *[]string {
 		batch = append(batch, insertSQL)
 	}
 
+	fileJSON, _ := json.MarshalIndent(batch, "", " ")
+
+	_ = ioutil.WriteFile("test.json", fileJSON, 0644)
 	return &batch
 }
 
