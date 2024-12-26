@@ -82,9 +82,14 @@ func n26BatchSend(commands *[]string) {
 
 	// Create a batch
 	batch := &pgx.Batch{}
-
+	stop := 0
 	for _, b := range *commands {
 		batch.Queue(b)
+		if stop < 20 {
+			break
+		} else {
+			stop = stop + 1
+		}
 	}
 	// Send the batch
 	br := conn.SendBatch(ctx, batch)
