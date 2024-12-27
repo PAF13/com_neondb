@@ -116,7 +116,7 @@ func batchPool(pool *pgxpool.Pool, chunks *[][]string) {
 		for j := 0; j < batch.Len(); j++ {
 			ct, err := br.Exec()
 			if err != nil {
-				log.Fatalf("Batch execution failed: %v\n%v", err, *batch.QueuedQueries[1])
+				log.Fatalf("Batch execution failed: %v\n%v", err, *batch.QueuedQueries[j])
 			}
 			fmt.Printf("Batch %d - Rows affected: %v\n", i+1, ct.RowsAffected())
 		}
@@ -139,7 +139,7 @@ func N26Upload(object []*n26.Transaction) {
 	sqlCommands := valueReplace(object)
 
 	// Split the slice into chunks of size 50
-	chunkSize := 50
+	chunkSize := 500
 	chunks := splitIntoChunks(sqlCommands, chunkSize)
 
 	// Print the results
