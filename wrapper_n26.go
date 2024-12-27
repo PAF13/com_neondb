@@ -30,7 +30,7 @@ func valueReplace(object []*n26.Transaction) *[]string {
 	length := len(object)
 	for i, v := range object {
 		if i != 0 {
-			fmt.Println("Version 0.0.1 | adding " + strconv.Itoa(i) + " / " + strconv.Itoa(length-1))
+			fmt.Println("Commands | adding " + strconv.Itoa(i) + " / " + strconv.Itoa(length-1))
 			string_b := strings.Replace(string(file), "\r\n", "", -1)
 
 			insertSQL := string(string_b)
@@ -82,28 +82,36 @@ func n26BatchSend(commands *[]string) {
 
 	// Create a batch
 	batch := &pgx.Batch{}
-	stop := 0
+	batchSize := len(*commands)
 	limitSize := 100
-
-	for _, b := range *commands {
-		batch.Queue(b)
-		if stop > limitSize {
-			break
+	step := 0
+	for step > batchSize {
+		lastIndex := 0
+		if (batchSize - step) > limitSize {
+			lastIndex = step + limitSize
 		} else {
-			stop = stop + 1
+			lastIndex = batchSize
 		}
-	}
-	// Send the batch
-	br := conn.SendBatch(ctx, batch)
-	defer br.Close()
 
-	// Handle batch results for i := 0; i < len(*commands); i++ {
-	for i := 0; i < limitSize; i++ {
-		_, err := br.Exec()
-		if err != nil {
-			log.Printf("Error executing query %d: %v", i+1, err)
-		} else {
-			log.Printf("Query %d executed successfully.", i+1)
+		for i := step; i < lastIndex; i++ { // start of the execution block
+			batch.Queue((*commands)[i])
+			fmt.Println("Batch | adding: " + strconv.Itoa(i) + " / " + strconv.Itoa(batchSize-1))
 		}
+
+		// Send the batch
+		br := conn.SendBatch(ctx, batch)
+		defer br.Close()
+
+		// Handle batch results for i := 0; i < len(*commands); i++ {
+		for i := 0; i < limitSize; i++ {
+			_, err := br.Exec()
+			if err != nil {
+				log.Printf("Error executing query %d: %v", i+1, err)
+			} else {
+				//log.Printf("Query %d executed successfully.", i+1)
+			}
+		}
+		step = step + limitSize
 	}
+
 }
