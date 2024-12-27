@@ -85,7 +85,7 @@ func n26BatchSend(commands *[]string) {
 	batchSize := len(*commands)
 	limitSize := 100
 	step := 0
-	for step > batchSize {
+	for step < batchSize {
 		lastIndex := 0
 		if (batchSize - step) > limitSize {
 			lastIndex = step + limitSize
