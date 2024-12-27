@@ -87,7 +87,7 @@ func N26Upload(object []*n26.Transaction) {
 
 	// Print the results
 	for i, chunk := range *chunks {
-		fmt.Printf("Chunk %d: %v\n", i+1, chunk)
+		fmt.Printf("Chunk %d: %d\n", i+1, len(chunk))
 	}
 }
 
