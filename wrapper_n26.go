@@ -13,14 +13,10 @@ import (
 
 	n26 "github.com/PAF13/com_n26"
 	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/joho/godotenv"
 )
 
-// prep a map to feed the batch sql - test
-
-func n26Upload2(object []*n26.Transaction) {
-	n26BatchSend(valueReplace(object))
-}
 func valueReplace(object []*n26.Transaction) *[]string {
 	file, err := ioutil.ReadFile(`queries\INSERT_BankTransfer.sql`)
 	if err != nil {
@@ -78,66 +74,78 @@ func splitIntoChunks(slice *[]string, chunkSize int) *[][]string {
 	return &chunks
 }
 
-func N26Upload(object []*n26.Transaction) {
-	sqlCommands := valueReplace(object)
-
-	// Split the slice into chunks of size 50
-	chunkSize := 1000
-	chunks := splitIntoChunks(sqlCommands, chunkSize)
-
-	// Print the results
-	for i, chunk := range *chunks {
-		fmt.Printf("Chunk %d: %d\n", i+1, len(chunk))
-	}
-}
-
-func n26BatchSend(commands *[]string) {
+func createPool() (*pgxpool.Pool, error) {
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
-	connStr := os.Getenv("DATABASE_URL")
-	conn, err := pgx.Connect(context.Background(), connStr)
-	if err != nil {
-		panic(err)
-	}
-	defer conn.Close(context.Background())
-
+	dsn := os.Getenv("DATABASE_URL")
 	ctx, cancel := context.WithTimeout(context.Background(), 120*time.Second)
 	defer cancel()
 
-	// Create a batch
-	batch := &pgx.Batch{}
-	batchSize := len(*commands)
-	limitSize := 100
-	step := 0
-	for step < batchSize {
-		lastIndex := 0
-		if (batchSize - step) > limitSize {
-			lastIndex = step + limitSize
-		} else {
-			lastIndex = batchSize
-		}
-
-		for i := step; i < lastIndex; i++ { // start of the execution block
-			batch.Queue((*commands)[i])
-			fmt.Println("Batch | adding: " + strconv.Itoa(i) + " / " + strconv.Itoa(batchSize-1))
-		}
-
-		// Send the batch
-		br := conn.SendBatch(ctx, batch)
-		defer br.Close()
-
-		// Handle batch results for i := 0; i < len(*commands); i++ {
-		for i := 0; i < limitSize; i++ {
-			_, err := br.Exec()
-			if err != nil {
-				log.Printf("Error executing query %d: %v", i+1, err)
-			} else {
-				//log.Printf("Query %d executed successfully.", i+1)
-			}
-		}
-		step = step + limitSize
+	pool, err := pgxpool.New(ctx, dsn)
+	if err != nil {
+		return nil, fmt.Errorf("unable to connect to database: %v", err)
 	}
 
+	return pool, nil
+}
+
+func batchPool(pool *pgxpool.Pool, chunks *[][]string) {
+	ctx := context.Background()
+
+	// Acquire a connection from the pool
+	conn, err := pool.Acquire(ctx)
+	if err != nil {
+		log.Fatalf("Unable to acquire connection: %v", err)
+	}
+	defer conn.Release()
+
+	batches := []*pgx.Batch{}
+
+	for _, chunk := range *chunks {
+		batches = append(batches, newBatch(&chunk))
+	}
+
+	// Execute each batch
+	for i, batch := range batches {
+		log.Printf("Executing batch %d", i+1)
+		br := conn.SendBatch(ctx, batch)
+
+		// Process results
+		for j := 0; j < batch.Len(); j++ {
+			ct, err := br.Exec()
+			if err != nil {
+				log.Fatalf("Batch execution failed: %v", err)
+			}
+			fmt.Printf("Batch %d - Rows affected: %v\n", i+1, ct.RowsAffected())
+		}
+
+		// Close the batch results
+		if err := br.Close(); err != nil {
+			log.Fatalf("Failed to close batch results: %v", err)
+		}
+	}
+}
+func newBatch(chunk *[]string) *pgx.Batch {
+	batch := &pgx.Batch{}
+	for _, b := range *chunk {
+		batch.Queue(b)
+	}
+
+	return batch
+}
+func N26Upload(object []*n26.Transaction) {
+	sqlCommands := valueReplace(object)
+
+	// Split the slice into chunks of size 50
+	chunkSize := 100
+	chunks := splitIntoChunks(sqlCommands, chunkSize)
+
+	// Print the results
+	for i, chunk := range *chunks {
+		fmt.Printf("Chunk %50d created | Size: %d\n", i+1, len(chunk))
+	}
+	pool, _ := createPool()
+	batchPool(pool, chunks)
 }
