@@ -58,6 +58,7 @@ func checkNil(value string) string {
 	if value == "" {
 		return "null"
 	} else {
+		value = strings.Replace(value, "'", "''", -1)
 		return "'" + value + "'"
 	}
 }
