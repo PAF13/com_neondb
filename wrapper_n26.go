@@ -139,7 +139,7 @@ func N26Upload(object []*n26.Transaction) {
 	sqlCommands := valueReplace(object)
 
 	// Split the slice into chunks of size 50
-	chunkSize := 100
+	chunkSize := 50
 	chunks := splitIntoChunks(sqlCommands, chunkSize)
 
 	// Print the results
