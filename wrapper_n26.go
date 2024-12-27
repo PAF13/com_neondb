@@ -17,7 +17,8 @@ import (
 )
 
 // prep a map to feed the batch sql - test
-func N26Upload(object []*n26.Transaction) {
+
+func n26Upload2(object []*n26.Transaction) {
 	n26BatchSend(valueReplace(object))
 }
 func valueReplace(object []*n26.Transaction) *[]string {
@@ -62,6 +63,31 @@ func checkNil(value string) string {
 		return "null"
 	} else {
 		return "'" + value + "'"
+	}
+}
+
+func splitIntoChunks(slice *[]string, chunkSize int) *[][]string {
+	var chunks [][]string
+	for i := 0; i < len(*slice); i += chunkSize {
+		end := i + chunkSize
+		if end > len(*slice) {
+			end = len(*slice)
+		}
+		chunks = append(chunks, (*slice)[i:end])
+	}
+	return &chunks
+}
+
+func N26Upload(object []*n26.Transaction) {
+	sqlCommands := valueReplace(object)
+
+	// Split the slice into chunks of size 50
+	chunkSize := 1000
+	chunks := splitIntoChunks(sqlCommands, chunkSize)
+
+	// Print the results
+	for i, chunk := range *chunks {
+		fmt.Printf("Chunk %d: %v\n", i+1, chunk)
 	}
 }
 
