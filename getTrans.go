@@ -13,12 +13,12 @@ import (
 
 // added date
 type Record struct {
-	bookingdate time.Time
-	partnername string
-	partneriban string
-	typess      string
-	accountname string
-	amounteur   float32
+	bookingdate *time.Time
+	partnername *string
+	partneriban *string
+	typess      *string
+	accountname *string
+	amounteur   *float32
 }
 
 // test2
