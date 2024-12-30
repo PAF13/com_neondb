@@ -70,7 +70,7 @@ func GetTrans() {
 		log.Fatalf("Row iteration failed: %v\n", err)
 	}
 
-	// Print the fetched records
+	// Print the fetched records.
 	for _, record := range records {
 		fmt.Printf("bookingdate: %10s partnername: %10s partneriban: %10s typess: %10s accountname: %10s\n",
 			processPointer(record.bookingdate),
