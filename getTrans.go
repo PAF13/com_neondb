@@ -72,13 +72,12 @@ func GetTrans() {
 
 	// Print the fetched records
 	for _, record := range records {
-		fmt.Print(
-			processPointer(record.bookingdate) +
-				processPointer(record.partnername) +
-				processPointer(record.partneriban) +
-				processPointer(record.typess) +
-				processPointer(record.accountname))
-		fmt.Print("\n")
+		fmt.Printf("bookingdate: %10s partnername: %10s partneriban: %10s typess: %10s accountname: %10s\n",
+			processPointer(record.bookingdate),
+			processPointer(record.partnername),
+			processPointer(record.partneriban),
+			processPointer(record.typess),
+			processPointer(record.accountname))
 	}
 }
 
@@ -89,11 +88,6 @@ func processPointer(ptr interface{}) string {
 		return ""
 	}
 
-	if ptr == "<nil>" {
-		fmt.Println("returning nil")
-		return ""
-	}
-	fmt.Println(ptr)
 	// Dereference the pointer to get its value
 	switch v := ptr.(type) {
 	case *string:
@@ -104,7 +98,7 @@ func processPointer(ptr interface{}) string {
 		}
 
 	case *time.Time:
-		return v.Format("YYYY-MM-DD")
+		return v.Format("2006-01-02")
 	default:
 		fmt.Println("Unsupported pointer type:", reflect.TypeOf(ptr))
 		return ""
