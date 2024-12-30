@@ -91,7 +91,7 @@ func GetTrans() {
 			processPointer(record.PartnerIBAN),
 			processPointer(record.Type),
 			processPointer(record.AccountName),
-			record.AmountEUR,
+			*record.AmountEUR,
 		)
 	}
 }
