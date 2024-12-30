@@ -90,6 +90,8 @@ func processPointer(ptr interface{}) string {
 		return ""
 	}
 
+	fmt.Println("type:")
+	fmt.Println(ptr)
 	// Dereference the pointer to get its value
 	switch v := ptr.(type) {
 	case *string:
