@@ -46,7 +46,7 @@ func GetTrans() {
 	// Slice to store results
 	var records []Record
 
-	// Iterate through the result set
+	// Iterate through the result set.
 	for rows.Next() {
 		var record Record
 		err := rows.Scan(
