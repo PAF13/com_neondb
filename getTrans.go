@@ -90,25 +90,17 @@ func processPointer(ptr interface{}) string {
 		return ""
 	}
 
-	fmt.Println("type:")
-	fmt.Println(ptr)
+	if ptr == nil {
+		return ""
+	}
 	// Dereference the pointer to get its value
 	switch v := ptr.(type) {
 	case *string:
-		if v != nil {
-			return ""
-		} else {
-			return *v
-		}
+		return *v
 	case *time.Time:
-		if v != nil {
-			return ""
-		} else {
-			return v.Format("YYYY-MM-DD")
-		}
+		return v.Format("YYYY-MM-DD")
 	default:
 		fmt.Println("Unsupported pointer type:", reflect.TypeOf(ptr))
 		return ""
 	}
-	return ""
 }
