@@ -89,7 +89,7 @@ func processPointer(ptr interface{}) string {
 		return ""
 	}
 
-	if ptr == nil {
+	if ptr == "<nil>" {
 		fmt.Println("returning nil")
 		return ""
 	}
