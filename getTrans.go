@@ -71,6 +71,15 @@ func GetTrans() {
 
 	// Print the fetched records
 	for _, record := range records {
-		fmt.Println(record)
+		time := record.bookingdate.Format("YYYY-MM-DD")
+		amount := fmt.Sprintf("%f", *record.amounteur)
+		fmt.Println(
+			time +
+				*record.partnername +
+				*record.partneriban +
+				*record.typess +
+				*record.accountname +
+				amount,
+		)
 	}
 }
