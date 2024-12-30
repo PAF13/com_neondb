@@ -97,7 +97,12 @@ func processPointer(ptr interface{}) string {
 	// Dereference the pointer to get its value
 	switch v := ptr.(type) {
 	case *string:
-		return *v
+		if v != nil {
+			return *v
+		} else {
+			return ""
+		}
+
 	case *time.Time:
 		return v.Format("YYYY-MM-DD")
 	default:
