@@ -73,10 +73,14 @@ func GetTrans() {
 	for _, record := range records {
 		time := record.bookingdate.Format("YYYY-MM-DD")
 		amount := fmt.Sprintf("%f", *record.amounteur)
+		var partneriban string
+		if record.partneriban == nil {
+			partneriban = ""
+		}
 		fmt.Println(
 			time +
 				*record.partnername +
-				*record.partneriban +
+				partneriban +
 				*record.typess +
 				*record.accountname +
 				amount,
