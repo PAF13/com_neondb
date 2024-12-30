@@ -15,7 +15,7 @@ type Record struct {
 	Name string
 }
 
-// test
+// test2
 func GetTrans() {
 	err := godotenv.Load()
 	if err != nil {
