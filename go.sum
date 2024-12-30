@@ -1,5 +1,11 @@
 github.com/PAF13/com_n26 v0.0.0-20241225175641-0549a3f244de h1:39CX4MLewDzbG+o7s/aroh0L+JmToXZ8P9G+zkuEl7U=
 github.com/PAF13/com_n26 v0.0.0-20241225175641-0549a3f244de/go.mod h1:OpUBAoRA6KZsJAV4t6yM7wK0XnjgkeP3Sb2PMBglx6Y=
+github.com/PAF13/com_n26 v0.0.0-20241226224600-d0d8150aa8cd h1:TpVikY81GbU5rHgxh0U+W6XSPcFO0iJIboaFoMqm+x0=
+github.com/PAF13/com_n26 v0.0.0-20241226224600-d0d8150aa8cd/go.mod h1:OpUBAoRA6KZsJAV4t6yM7wK0XnjgkeP3Sb2PMBglx6Y=
+github.com/PAF13/com_n26 v0.0.10 h1:vWKwu3BQeTuk93dpJjx2v8XiBzKyNNS2OTnS3CRYJWM=
+github.com/PAF13/com_n26 v0.0.10/go.mod h1:OpUBAoRA6KZsJAV4t6yM7wK0XnjgkeP3Sb2PMBglx6Y=
+github.com/PAF13/com_n26 v0.0.11 h1:wpXaTTbKQnY5lfvLxOh01MBOlIt7MZrgst9TUBgT95g=
+github.com/PAF13/com_n26 v0.0.11/go.mod h1:OpUBAoRA6KZsJAV4t6yM7wK0XnjgkeP3Sb2PMBglx6Y=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=

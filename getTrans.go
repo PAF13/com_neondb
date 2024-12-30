@@ -2,12 +2,15 @@ package com_neondb
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
 	"reflect"
 	"time"
 
+	n26 "github.com/PAF13/com_n26"
 	"github.com/jackc/pgx/v5"
 	"github.com/joho/godotenv"
 )
@@ -47,18 +50,25 @@ func GetTrans() {
 	defer rows.Close()
 
 	// Slice to store results
-	var records []Record
+	var records []n26.Records
 
 	// Iterate through the result set.
 	for rows.Next() {
-		var record Record
+		var record n26.Records
 		err := rows.Scan(
-			&record.bookingdate,
-			&record.partnername,
-			&record.partneriban,
-			&record.typess,
-			&record.accountname,
-			&record.amounteur)
+			&record.BookingDate,
+			//&record.ValueDate,
+			&record.PartnerName,
+			&record.PartnerIBAN,
+			&record.Type,
+			//&record.PaymentReference,
+			//&record.AccountName,
+			&record.AccountName,
+			&record.AmountEUR,
+			//&record.OriginalAmount,
+			//&record.OriginalCurrency,
+			//&record.ExchangeRate,
+		)
 		if err != nil {
 			log.Fatalf("Row scan failed: %v\n", err)
 		}
@@ -69,16 +79,19 @@ func GetTrans() {
 	if err = rows.Err(); err != nil {
 		log.Fatalf("Row iteration failed: %v\n", err)
 	}
+	fileJSON, _ := json.MarshalIndent(records, "", " ")
+
+	_ = ioutil.WriteFile("temp/banktransactions.json", fileJSON, 0644)
 
 	// Print the fetched records
 	for _, record := range records {
 		fmt.Printf("bookingdate: %-10s partnername: %-20s partneriban: %s typess: %-15s accountname: %-10s amounteur: %f\n",
-			processPointer(record.bookingdate),
-			processPointer(record.partnername),
-			processPointer(record.partneriban),
-			processPointer(record.typess),
-			processPointer(record.accountname),
-			*record.amounteur,
+			processPointer(record.BookingDate),
+			processPointer(record.PartnerName),
+			processPointer(record.PartnerIBAN),
+			processPointer(record.Type),
+			processPointer(record.AccountName),
+			record.AmountEUR,
 		)
 	}
 }
