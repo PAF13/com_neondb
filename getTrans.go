@@ -5,13 +5,14 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"time"
 
 	"github.com/jackc/pgx/v5"
 	"github.com/joho/godotenv"
 )
 
 type Record struct {
-	bookingdate string
+	bookingdate time.Time
 	partnername string
 	partneriban string
 	typess      string
