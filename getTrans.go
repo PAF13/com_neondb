@@ -11,6 +11,7 @@ import (
 	"github.com/joho/godotenv"
 )
 
+// added date
 type Record struct {
 	bookingdate time.Time
 	partnername string
