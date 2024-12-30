@@ -11,8 +11,12 @@ import (
 )
 
 type Record struct {
-	ID   int
-	Name string
+	bookingdate string
+	partnername string
+	partneriban string
+	typess      string
+	accountname string
+	amounteur   float32
 }
 
 // test2
@@ -31,7 +35,7 @@ func GetTrans() {
 	defer conn.Close(context.Background())
 
 	// Query to fetch all records
-	query := `SELECT id, name FROM public.transactions_n26`
+	query := `SELECT bookingdate, partnername, partneriban, typess, accountname, amounteur FROM public.transactions_n26`
 
 	rows, err := conn.Query(context.Background(), query)
 	if err != nil {
@@ -42,10 +46,16 @@ func GetTrans() {
 	// Slice to store results
 	var records []Record
 
-	// Iterate through the result set
+	// Iterate through the result set  &record.ID, &record.Name
 	for rows.Next() {
 		var record Record
-		err := rows.Scan(&record.ID, &record.Name)
+		err := rows.Scan(
+			&record.bookingdate,
+			&record.partnername,
+			&record.partneriban,
+			&record.typess,
+			&record.accountname,
+			&record.amounteur)
 		if err != nil {
 			log.Fatalf("Row scan failed: %v\n", err)
 		}
@@ -59,6 +69,6 @@ func GetTrans() {
 
 	// Print the fetched records
 	for _, record := range records {
-		fmt.Printf("ID: %d, Name: %s\n", record.ID, record.Name)
+		fmt.Println(record)
 	}
 }
