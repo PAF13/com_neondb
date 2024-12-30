@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"reflect"
 	"time"
 
 	"github.com/jackc/pgx/v5"
@@ -71,19 +72,41 @@ func GetTrans() {
 
 	// Print the fetched records
 	for _, record := range records {
-		time := record.bookingdate.Format("YYYY-MM-DD")
 		amount := fmt.Sprintf("%f", *record.amounteur)
-		var partneriban string
-		if record.partneriban == nil {
-			partneriban = ""
-		}
 		fmt.Println(
-			time +
-				*record.partnername +
-				partneriban +
-				*record.typess +
-				*record.accountname +
-				amount,
-		)
+			processPointer(*record.bookingdate) +
+				processPointer(*record.partnername) +
+				processPointer(*record.partneriban) +
+				processPointer(*record.typess) +
+				processPointer(*record.accountname) +
+				amount)
 	}
+}
+
+func processPointer(ptr interface{}) string {
+	// Check if the input is a pointer using reflection
+	if reflect.TypeOf(ptr).Kind() != reflect.Ptr {
+		fmt.Println("Expected a pointer, but received:", reflect.TypeOf(ptr).Kind())
+		return ""
+	}
+
+	// Dereference the pointer to get its value
+	switch v := ptr.(type) {
+	case *string:
+		if v != nil {
+			return ""
+		} else {
+			return *v
+		}
+	case *time.Time:
+		if v != nil {
+			return ""
+		} else {
+			return v.Format("YYYY-MM-DD")
+		}
+	default:
+		fmt.Println("Unsupported pointer type:", reflect.TypeOf(ptr))
+		return ""
+	}
+	return ""
 }
