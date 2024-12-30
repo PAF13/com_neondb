@@ -74,11 +74,11 @@ func GetTrans() {
 	for _, record := range records {
 		amount := fmt.Sprintf("%f", *record.amounteur)
 		fmt.Println(
-			processPointer(*record.bookingdate) +
-				processPointer(*record.partnername) +
-				processPointer(*record.partneriban) +
-				processPointer(*record.typess) +
-				processPointer(*record.accountname) +
+			processPointer(record.bookingdate) +
+				processPointer(record.partnername) +
+				processPointer(record.partneriban) +
+				processPointer(record.typess) +
+				processPointer(record.accountname) +
 				amount)
 	}
 }
