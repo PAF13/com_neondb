@@ -72,7 +72,7 @@ func GetTrans() {
 
 	// Print the fetched records
 	for _, record := range records {
-		fmt.Printf("bookingdate: %10s partnername: %25s partneriban: %25s typess: %10s accountname: %10s\n",
+		fmt.Printf("bookingdate: %-10s partnername: %-25s partneriban: %-20s typess: %-20s accountname: %-20s\n",
 			processPointer(record.bookingdate),
 			processPointer(record.partnername),
 			processPointer(record.partneriban),
