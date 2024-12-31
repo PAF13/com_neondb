@@ -1,0 +1,1 @@
+SELECT bookingdate, partnername, partneriban, typess, accountname, amounteur FROM public.transactions_n26

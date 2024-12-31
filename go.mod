@@ -3,7 +3,7 @@ module github.com/PAF13/com_neondb
 go 1.23.4
 
 require (
-	github.com/PAF13/com_n26 v0.0.12
+	github.com/PAF13/com_n26 v0.0.13
 	github.com/jackc/pgx/v5 v5.7.2
 	github.com/joho/godotenv v1.5.1
 )

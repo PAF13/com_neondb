@@ -41,7 +41,7 @@ func GetTrans() {
 	defer conn.Close(context.Background())
 
 	// Query to fetch all records
-	query := `SELECT bookingdate, partnername, partneriban, typess, accountname, amounteur FROM public.transactions_n26`
+	query := `SELECT id, bookingdate, valuedate, partnername, partneriban, typess, paymentreference, accountname, amounteur, originalamount, originalcurrency, exchangerate FROM public.transactions_n26`
 
 	rows, err := conn.Query(context.Background(), query)
 	if err != nil {
@@ -56,18 +56,18 @@ func GetTrans() {
 	for rows.Next() {
 		var record n26.Records
 		err := rows.Scan(
+			&record.ID,
 			&record.BookingDate,
-			//&record.ValueDate,
+			&record.ValueDate,
 			&record.PartnerName,
 			&record.PartnerIBAN,
 			&record.Type,
-			//&record.PaymentReference,
-			//&record.AccountName,
+			&record.PaymentReference,
 			&record.AccountName,
 			&record.AmountEUR,
-			//&record.OriginalAmount,
-			//&record.OriginalCurrency,
-			//&record.ExchangeRate,
+			&record.OriginalAmount,
+			&record.OriginalCurrency,
+			&record.ExchangeRate,
 		)
 		if err != nil {
 			log.Fatalf("Row scan failed: %v\n", err)
@@ -82,18 +82,6 @@ func GetTrans() {
 	fileJSON, _ := json.MarshalIndent(records, "", " ")
 
 	_ = ioutil.WriteFile("temp/banktransactions.json", fileJSON, 0644)
-
-	// Print the fetched records
-	for _, record := range records {
-		fmt.Printf("bookingdate: %-10s partnername: %-20s partneriban: %s typess: %-15s accountname: %-10s amounteur: %f\n",
-			processPointer(record.BookingDate),
-			processPointer(record.PartnerName),
-			processPointer(record.PartnerIBAN),
-			processPointer(record.Type),
-			processPointer(record.AccountName),
-			*record.AmountEUR,
-		)
-	}
 }
 
 func processPointer(ptr interface{}) string {
